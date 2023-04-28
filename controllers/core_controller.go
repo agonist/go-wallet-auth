@@ -1,17 +1,17 @@
 package controllers
 
 import (
-	"go-block-api/evm"
+	"go-block-api/config"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetBalance(c *gin.Context) {
-	client := c.MustGet("ethClient").(*evm.Client)
+	app := c.MustGet("app").(*config.App)
 	address := c.Param("address")
 
-	balance, err := client.GetBalance(address)
+	balance, err := app.Rpc.GetBalance(address)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	}
@@ -20,9 +20,9 @@ func GetBalance(c *gin.Context) {
 }
 
 func GetGasPrice(c *gin.Context) {
-	client := c.MustGet("ethClient").(*evm.Client)
+	app := c.MustGet("app").(*config.App)
 
-	gasPrice, err := client.GetGasPrice()
+	gasPrice, err := app.Rpc.GetGasPrice()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	}

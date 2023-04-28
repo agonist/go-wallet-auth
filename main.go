@@ -1,18 +1,22 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"go-block-api/config"
 	"go-block-api/controllers"
-	"go-block-api/evm"
+
+	"github.com/gin-gonic/gin"
+
+	"github.com/gin-contrib/cors"
 )
 
 func main() {
-	r := gin.Default()
+	app := config.Init()
 
-	client := evm.New("https://eth-mainnet.g.alchemy.com/v2/pt26dRBVnOVRXaLmzCB7oIZ0o1PfIAcu")
+	r := gin.Default()
+	r.Use(cors.Default())
 
 	r.Use(func(c *gin.Context) {
-		c.Set("ethClient", client)
+		c.Set("app", app)
 	})
 
 	core := r.Group("/core")
@@ -20,5 +24,11 @@ func main() {
 		core.GET("/gasPrice", controllers.GetGasPrice)
 		core.GET("/balance/:address", controllers.GetBalance)
 	}
+	auth := r.Group("/auth")
+	{
+		auth.GET("/nonce/:address", controllers.Nonce)
+		auth.POST("/signin", controllers.Signin)
+	}
+
 	r.Run()
 }
