@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"go-block-api/auth"
 	"go-block-api/config"
 	"go-block-api/evm"
 	"go-block-api/model"
@@ -79,11 +80,20 @@ func Signin(c *gin.Context) {
 
 	addr = crypto.PubkeyToAddress(*publicKey).Hex()
 
+	token, err := auth.GenerateJWT(addr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	var user model.User
 	// if user exist we return it
 	res := app.Db.Where("address = ?", addr).First(&user)
 	if res.RowsAffected == 1 {
-		c.JSON(http.StatusOK, user)
+		c.JSON(http.StatusOK, gin.H{
+			"user": user,
+			"jwt":  token,
+		})
 		return
 	}
 
@@ -96,5 +106,8 @@ func Signin(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, gin.H{
+		"user": user,
+		"jwt":  token,
+	})
 }
