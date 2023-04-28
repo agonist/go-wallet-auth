@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"time"
 
@@ -26,10 +25,7 @@ func GenerateJWT(address string) (token string, err error) {
 
 	resToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	secret := os.Getenv("JWT_SECRET")
-	fmt.Println(resToken)
-	fmt.Println(secret)
 	signedToken, err := resToken.SignedString([]byte(secret))
-	fmt.Println(signedToken)
 	return signedToken, nil
 }
 

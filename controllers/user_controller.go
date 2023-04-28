@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"go-block-api/config"
 	"go-block-api/model"
 	"net/http"
@@ -10,7 +9,6 @@ import (
 )
 
 func GetUser(c *gin.Context) {
-	fmt.Println("GM")
 	app := c.MustGet("app").(*config.App)
 	address := c.MustGet("address")
 

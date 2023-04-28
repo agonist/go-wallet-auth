@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 	"go-block-api/auth"
 	"net/http"
 
@@ -10,7 +9,6 @@ import (
 
 func Auth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		fmt.Println("YO MIDDLE")
 		token := ctx.GetHeader("Authorization")
 		if token == "" {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "jwt missing"})
