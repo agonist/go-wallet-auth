@@ -1,4 +1,4 @@
-module go-block-api
+module github.com/agonist/goblockapi
 
 go 1.20
 
